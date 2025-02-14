@@ -57,7 +57,11 @@ export class NFCController {
     }
 
     try {
-      await this.ndef.write(message);
+      await this.ndef.write({
+        records: [{recordType: "text", data: message}],
+      }, {
+        overwrite: true,
+      });
       console.log("> Message written");
     } catch (error) {
       console.error("Argh! " + error);
@@ -73,7 +77,7 @@ export class NFCController {
     try {
       await this.ndef.write({
         records: [],
-      },{
+      }, {
         overwrite: true,
       });
       console.log("> Message written");
