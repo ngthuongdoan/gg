@@ -28,7 +28,7 @@ const UserInput = ({ asset }: UserInputType) => {
       <div className="flex flex-col gap-4 items-center">
         <div>
           <div className="avatar">
-            <button onClick={assignNfc} className="h-24" disabled={!playerName}>
+            <button onClick={assignNfc} className="h-24" disabled={!playerName || !asset}>
               <img
                 src={avatarImg}
                 alt="Avatar"
