@@ -3,15 +3,17 @@ import { NFCController } from "../../services/NFC";
 type NFCModalProps = {
   playerName: string;
   id: string;
+  asset: number
 };
 const nfc = new NFCController();
-const NFCModal = ({ playerName, id }: NFCModalProps) => {
+const NFCModal = ({ playerName, id, asset }: NFCModalProps) => {
   useEffect(() => {
     (async () => {
-      await nfc.write(playerName);
+      await nfc.write({ name: playerName, asset });
       await nfc.scan();
     })()
-  }, [playerName])
+  }, [playerName, asset])
+
   return (
     <dialog id={id} className="modal">
       <div className="modal-box">

@@ -8,10 +8,16 @@ export class NFCController {
       console.error("Web NFC is not supported in this browser.");
     }
   }
-  readTextRecord(record: NDEFRecord) {
-    alert(record.recordType === "text");
-    const textDecoder = new TextDecoder(record.encoding);
-    alert(`Text: ${textDecoder.decode(record.data)} (${record.lang})`);
+  readTextRecord(records: readonly NDEFRecord[], serialNumber: string) {
+    records.forEach((record) => {
+      if (record.recordType === "text") {
+        const textDecoder = new TextDecoder(record.encoding);
+        const currentUser = JSON.parse(textDecoder.decode(record.data));
+        currentUser.id = serialNumber;
+        alert(JSON.stringify(currentUser, null, 2));
+      }
+    });
+    return 
   }
   async scan() {
     if (!this.ndef) {
@@ -31,10 +37,7 @@ export class NFCController {
 
       this.ndef.addEventListener("reading", (event: unknown) => {
         const { message, serialNumber } = event as NDEFReadingEvent;
-        alert(JSON.stringify(event, null, 2));
-        alert(`> Serial Number: ${serialNumber}`);
-        this.readTextRecord(message.records[0]);
-        alert(`> Records: (${JSON.stringify(message.records, null, 2)})`);
+        this.readTextRecord(message.records, serialNumber);
       });
       
     } catch (error) {
@@ -42,13 +45,13 @@ export class NFCController {
     }
   }
 
-  async write(message: string) {
+  async write(message: Record<string, unknown>) {
     if (!this.ndef) {
       console.error("NDEFReader is not initialized.");
       return;
     }
     try {
-      await this.ndef.write(message);
+      await this.ndef.write(JSON.stringify(message));
     } catch (error) {
       console.log("Argh! " + error);
     }
