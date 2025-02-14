@@ -1,12 +1,12 @@
 import { useId, useState } from "react";
 import NFCModal from "../NFCModal/NFCModal";
+import { useStore } from "../../store";
 
-type UserInputType = {
-  asset: number;
-}
-const UserInput = ({ asset }: UserInputType) => {
+const UserInput = () => {
   const [playerName, setPlayerName] = useState<string>("");
   const id = useId();
+  const asset = useStore(state => state.asset)
+
   const assignNfc = () => {
     const modal = document.getElementById(id);
     if (modal) {
@@ -51,7 +51,7 @@ const UserInput = ({ asset }: UserInputType) => {
           </div>
         </div>
       </div>
-      <NFCModal playerName={playerName} id={id} asset={asset} />
+      <NFCModal playerName={playerName} id={id} avatar={avatarImg} />
     </>
   );
 };

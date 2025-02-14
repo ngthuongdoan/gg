@@ -1,19 +1,21 @@
 import { useEffect } from "react";
 import { NFCController } from "../../services/NFC";
+import { useStore } from "../../store";
 type NFCModalProps = {
   playerName: string;
   id: string;
-  asset: number
+  avatar: string;
 };
 const nfc = new NFCController();
-const NFCModal = ({ playerName, id, asset }: NFCModalProps) => {
+const NFCModal = ({ playerName, id, avatar }: NFCModalProps) => {
+  const asset = useStore(state => state.asset)
   useEffect(() => {
     (async () => {
       if (!asset || !playerName) return;
-      await nfc.write({ name: playerName, asset });
+      await nfc.write({ name: playerName, asset, avatar });
       await nfc.scan();
     })()
-  }, [playerName, asset])
+  }, [playerName, asset, avatar])
 
   return (
     <dialog id={id} className="modal">

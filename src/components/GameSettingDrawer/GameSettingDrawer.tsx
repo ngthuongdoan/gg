@@ -1,12 +1,15 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent } from "react"
 import UserInput from "../UserInput/UserInput"
+import { useStore } from "../../store"
 
 type GameSettingProps = {
   opened: boolean
   onClose: () => void
 }
 const GameSettingDrawer = ({ opened, onClose }: GameSettingProps) => {
-  const [asset, setAsset] = useState<number>(0)
+  const asset = useStore(state => state.asset)
+  const setAsset = useStore(state => state.setAsset)
+  const setPlay = useStore(state => state.setPlay)
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
       onClose()
@@ -24,15 +27,15 @@ const GameSettingDrawer = ({ opened, onClose }: GameSettingProps) => {
               <input type="number" className="tabular-nums" required placeholder="Start money" value={asset} onChange={(e) => setAsset(Number(e.target.value))} />
             </label>
             <div className="grid gap-4 grid-cols-2">
-              <UserInput asset={asset} />
-              <UserInput asset={asset} />
-              <UserInput asset={asset} />
-              <UserInput asset={asset} />
-              <UserInput asset={asset} />
+              <UserInput />
+              <UserInput />
+              <UserInput />
+              <UserInput />
+              <UserInput />
             </div>
           </div>
           <div className="flex flex-col gap-4 absolute bottom-4 left-4 right-4">
-            <button className="btn btn-lg btn-secondary w-full" onClick={onClose}>Play</button>
+            <button className="btn btn-lg btn-secondary w-full" onClick={() => setPlay(true)}>Play</button>
             <button className="btn btn-lg btn-ghost w-full bg-white text-black" onClick={onClose}>Cancel</button>
           </div>
         </div>
