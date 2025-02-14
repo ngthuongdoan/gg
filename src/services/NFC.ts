@@ -8,7 +8,11 @@ export class NFCController {
       console.error("Web NFC is not supported in this browser.");
     }
   }
-
+  readTextRecord(record: NDEFRecord) {
+    alert(record.recordType === "text");
+    const textDecoder = new TextDecoder(record.encoding);
+    alert(`Text: ${textDecoder.decode(record.data)} (${record.lang})`);
+  }
   async scan() {
     if (!this.ndef) {
       console.error("NDEFReader is not initialized.");
@@ -29,8 +33,10 @@ export class NFCController {
         const { message, serialNumber } = event as NDEFReadingEvent;
         alert(JSON.stringify(event, null, 2));
         alert(`> Serial Number: ${serialNumber}`);
+        this.readTextRecord(message.records[0]);
         alert(`> Records: (${JSON.stringify(message.records, null, 2)})`);
       });
+      
     } catch (error) {
       console.error("Argh! " + error);
     }
