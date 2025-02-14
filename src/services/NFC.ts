@@ -25,11 +25,8 @@ export class NFCController {
       return;
     }
 
-    console.log("Starting scan...");
-
     try {
       await this.ndef.scan();
-      console.log("> Scan started");
 
       this.ndef.addEventListener("readingerror", () => {
         console.error("Argh! Cannot read data from the NFC tag. Try another one?");
@@ -39,7 +36,6 @@ export class NFCController {
         const { message, serialNumber } = event as NDEFReadingEvent;
         this.readTextRecord(message.records, serialNumber);
       });
-      
     } catch (error) {
       console.error("Argh! " + error);
     }
@@ -51,7 +47,7 @@ export class NFCController {
       return;
     }
     try {
-      await this.ndef.write(JSON.stringify(message));
+      await this.ndef.write(JSON.stringify(message), { overwrite: true });
     } catch (error) {
       console.log("Argh! " + error);
     }
