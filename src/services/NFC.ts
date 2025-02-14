@@ -37,33 +37,16 @@ export class NFCController {
   }
 
   async write(message: string) {
-  
-    try {
-      const ndef = new NDEFReader();
-      await ndef.write(message);
-    } catch (error) {
-      console.log("Argh! " + error);
-    }
-  };
-
-  async clear() {
     if (!this.ndef) {
       console.error("NDEFReader is not initialized.");
       return;
     }
-
     try {
-      await this.ndef.write({
-        records: [],
-      }, {
-        overwrite: true,
-      });
-      console.log("> Message written");
+      await this.ndef.write(message);
     } catch (error) {
-      console.error("Argh! " + error);
+      console.log("Argh! " + error);
     }
-  }
-
+  };
 
   async makeReadOnly() {
     if (!this.ndef) {
