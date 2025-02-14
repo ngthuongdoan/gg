@@ -1,7 +1,6 @@
 export class NFCController {
   private ndef: NDEFReader | null = null;
 
-  loading: boolean = false;
   constructor() {
     if ("NDEFReader" in window) {
       this.ndef = new NDEFReader();
@@ -16,37 +15,24 @@ export class NFCController {
       return;
     }
 
-    this.loading = true;
     console.log("Starting scan...");
-    let timeoutId: number | undefined;
 
     try {
       await this.ndef.scan();
       console.log("> Scan started");
 
-      timeoutId = setTimeout(() => {
-        console.error("Scan timed out.");
-        console.error("Scan timed out.");
-        this.loading = false;
-      }, 10000); // 10 seconds timeout
-
       this.ndef.addEventListener("readingerror", () => {
-        clearTimeout(timeoutId);
         console.error("Argh! Cannot read data from the NFC tag. Try another one?");
-        this.loading = false
       });
 
       this.ndef.addEventListener("reading", (event: unknown) => {
-        clearTimeout(timeoutId);
-        this.loading = false;
         const { message, serialNumber } = event as NDEFReadingEvent;
+        alert(JSON.stringify(event, null, 2));
         alert(`> Serial Number: ${serialNumber}`);
         alert(`> Records: (${JSON.stringify(message.records, null, 2)})`);
       });
     } catch (error) {
-      clearTimeout(timeoutId);
       console.error("Argh! " + error);
-      this.loading = false
     }
   }
 
@@ -57,11 +43,7 @@ export class NFCController {
     }
 
     try {
-      await this.ndef.write({
-        records: [{recordType: "text", data: message}],
-      }, {
-        overwrite: true,
-      });
+      await this.ndef.write(message);
       console.log("> Message written");
     } catch (error) {
       console.error("Argh! " + error);
