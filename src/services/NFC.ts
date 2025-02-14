@@ -37,18 +37,14 @@ export class NFCController {
   }
 
   async write(message: string) {
-    if (!this.ndef) {
-      console.error("NDEFReader is not initialized.");
-      return;
-    }
-
+  
     try {
-      await this.ndef.write(message);
-      console.log("> Message written");
+      const ndef = new NDEFReader();
+      await ndef.write(message);
     } catch (error) {
-      console.error("Argh! " + error);
+      console.log("Argh! " + error);
     }
-  }
+  };
 
   async clear() {
     if (!this.ndef) {
