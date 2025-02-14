@@ -9,6 +9,7 @@ const nfc = new NFCController();
 const NFCModal = ({ playerName, id, asset }: NFCModalProps) => {
   useEffect(() => {
     (async () => {
+      if (!asset || !playerName) return;
       await nfc.write({ name: playerName, asset });
       await nfc.scan();
     })()
